@@ -9,6 +9,7 @@ const postsRoutes = require('./routes/posts');
 const categoriesRoutes = require('./routes/categories');
 const tagsRoutes = require('./routes/tags');
 const settingsRoutes = require('./routes/settings');
+const publicRoutes = require('./routes/public');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -22,6 +23,7 @@ app.use('/api/posts', postsRoutes);
 app.use('/api/categories', categoriesRoutes);
 app.use('/api/tags', tagsRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/public', publicRoutes);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

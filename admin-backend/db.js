@@ -50,7 +50,7 @@ const initDatabase = async () => {
     category_id INTEGER,
     status TEXT DEFAULT 'draft',
     top INTEGER DEFAULT 0,
-    views INTEGER DEFAULT 0,
+    view_count INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
@@ -118,32 +118,38 @@ const saveDatabase = () => {
 const queryOne = (sql, params = []) => {
   const stmt = db.prepare(sql);
   const columns = stmt.getColumnNames();
-  const result = stmt.get(params);
-  stmt.free();
-  if (!result) return null;
-  if (Array.isArray(result)) {
-    const obj = {};
-    columns.forEach((name, index) => {
-      obj[name] = result[index];
-    });
-    return obj;
+  stmt.bind(params);
+  if (stmt.step()) {
+    const result = stmt.get();
+    stmt.free();
+    if (Array.isArray(result)) {
+      const obj = {};
+      columns.forEach((name, index) => {
+        obj[name] = result[index];
+      });
+      return obj;
+    }
+    return result;
   }
-  return result;
+  stmt.free();
+  return null;
 };
 
 const queryAll = (sql, params = []) => {
   const stmt = db.prepare(sql);
   const columns = stmt.getColumnNames();
-  const results = stmt.all(params);
-  stmt.free();
-  if (!results || !Array.isArray(results)) return [];
-  return results.map(row => {
+  stmt.bind(params);
+  const results = [];
+  while (stmt.step()) {
+    const row = stmt.get();
     const obj = {};
     columns.forEach((name, index) => {
       obj[name] = row[index];
     });
-    return obj;
-  });
+    results.push(obj);
+  }
+  stmt.free();
+  return results;
 };
 
 const execute = (sql, params = []) => {

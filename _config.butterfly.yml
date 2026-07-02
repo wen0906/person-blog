@@ -166,6 +166,7 @@ inject:
   head:
     - <link rel="stylesheet" href="/css/custom.css">
   bottom:
+    - <script src="/js/api.js"></script>
     - <script src="/js/custom.js"></script>
 
 # 评论系统 (使用Giscus)
