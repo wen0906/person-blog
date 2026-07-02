@@ -1,0 +1,51 @@
+name: 自动部署博客到GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # 监听main分支的推送事件
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整的历史记录
+
+      - name: 设置Node.js环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'  # 使用Node.js 18版本
+          cache: 'npm'  # 启用npm缓存
+
+      - name: 安装依赖
+        run: npm install
+
+      - name: 清理缓存
+        run: npm run clean
+
+      - name: 生成静态文件
+        run: npm run build
+
+      - name: 部署到GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages  # 部署到gh-pages分支
+          publish_dir: ./public  # 部署public目录下的文件
+          commit_message: '部署博客: ${{ github.event.head_commit.message }}'
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+
+      - name: 部署完成通知
+        run: echo "博客已成功部署到 https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+
+# 注意事项：
+# 1. 需要在仓库设置中启用GitHub Pages，选择gh-pages分支作为部署源
+# 2. 如果博客部署在根目录（yourusername.github.io），需要修改_config.yml中的root为/
+# 3. 如果博客部署在子目录，需要修改_config.yml中的root为/仓库名/
+# 4. 确保deploy配置中的repo地址正确

@@ -1,0 +1,106 @@
+/* 自定义CSS样式 */
+
+/* 全局字体优化 */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 文章内容优化 */
+#article-container {
+  line-height: 1.8;
+}
+
+/* 代码块优化 */
+figure.highlight {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* 图片优化 */
+img {
+  border-radius: 8px;
+}
+
+/* 链接样式优化 */
+a {
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-bg);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  #article-container {
+    padding: 20px 15px;
+  }
+}
+
+/* 文章卡片阴影效果 */
+.post-card {
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.post-card:hover {
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* 暗黑模式适配 */
+[data-theme="dark"] {
+  --scrollbar-bg: rgba(144, 147, 153, 0.3);
+}
+
+/* 暗黑模式优化 */
+[data-theme="dark"] body {
+  background-color: #1a1a1a;
+}
+
+/* 代码块复制按钮优化 */
+.copy-btn {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+  opacity: 0.8;
+}
+
+/* TOC目录优化 */
+.toc-content {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+/* 页脚优化 */
+#footer {
+  font-size: 14px;
+}
+
+/* 页面过渡动画 */
+#page-header {
+  transition: all 0.3s ease;
+}
+
+/* 移动端菜单优化 */
+@media (max-width: 768px) {
+  #mobile-sidebar {
+    backdrop-filter: blur(10px);
+  }
+}
