@@ -10,6 +10,19 @@ document.addEventListener('DOMContentLoaded', function() {
   initBlogAPI();
 });
 
+// 监听 PJAX 事件，解决 Butterfly 主题 PJAX 切换页面后不重新加载后端数据的问题
+document.addEventListener('pjax:complete', function() {
+  console.log('PJAX 页面切换完成，重新加载后端数据');
+  addSmoothScroll();
+  handleImageError();
+  enhanceCodeCopy();
+  initBlogAPI();
+});
+
+document.addEventListener('pjax:send', function() {
+  console.log('PJAX 开始加载新页面');
+});
+
 async function initBlogAPI() {
   if (!window.BlogAPI) {
     console.warn('BlogAPI 未加载');
@@ -21,9 +34,82 @@ async function initBlogAPI() {
     await loadTags();
     await loadSiteSettings();
     await loadPosts();
+    await loadPostDetail();
   } catch (error) {
     console.error('API初始化失败:', error);
   }
+}
+
+async function loadPostDetail() {
+  const postArticle = document.querySelector('#post-detail-container');
+  if (!postArticle) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const postId = params.get('id');
+  if (!postId) {
+    postArticle.innerHTML = '<div class="post-error">文章不存在</div>';
+    return;
+  }
+
+  try {
+    const response = await window.BlogAPI.getPost(postId);
+    if (response.success && response.data) {
+      renderPostDetail(response.data);
+    } else {
+      postArticle.innerHTML = '<div class="post-error">文章不存在或未发布</div>';
+    }
+  } catch (error) {
+    console.error('加载文章详情失败:', error);
+    postArticle.innerHTML = '<div class="post-error">加载文章失败，请检查后端服务是否运行</div>';
+  }
+}
+
+function renderPostDetail(post) {
+  const container = document.querySelector('#post-detail-container');
+  if (!container) return;
+
+  const date = new Date(post.created_at).toLocaleDateString('zh-CN');
+  const categoryName = post.category_name || '未分类';
+  const tagsHtml = (post.tags || []).map(tag =>
+    `<a class="article-meta__tags" href="/tags/${encodeURIComponent(tag.name)}/"><span class="tags-punctuation"><i class="fas fa-tag"></i>${tag.name}</span></a>`
+  ).join('');
+
+  const contentHtml = simpleMarkdownToHtml(post.content || '');
+
+  document.title = post.title + ' - ' + document.title;
+
+  container.innerHTML = `
+    <div class="post-detail">
+      <h1 class="post-title">${post.title}</h1>
+      <div class="article-meta-wrap">
+        <span class="post-meta-date"><i class="far fa-calendar-alt"></i> ${date}</span>
+        <span class="article-meta"><span class="article-meta__categories"><a href="/categories/${encodeURIComponent(categoryName)}/">${categoryName}</a></span></span>
+        ${tagsHtml ? '<span class="article-meta tags-wrap">' + tagsHtml + '</span>' : ''}
+        <span class="article-meta"><i class="fas fa-eye"></i> ${post.view_count || 0}</span>
+      </div>
+      <div class="post-content">${contentHtml}</div>
+    </div>
+  `;
+}
+
+function simpleMarkdownToHtml(md) {
+  if (!md) return '';
+  let html = md
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  html = html
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/^\> (.+)$/gm, '<blockquote>$1</blockquote>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/^(?!<)(.+)$/gm, '<p>$1</p>');
+  return '<div>' + html + '</div>';
 }
 
 async function loadPosts() {
@@ -55,12 +141,12 @@ function renderPosts(posts) {
     return `
       <div class="recent-post-item" data-post-id="${post.id}">
         <div class="post_cover">
-          <a href="/post/${post.id}.html" title="${post.title}">
+          <a href="/post/?id=${post.id}" title="${post.title}">
             <img class="post_bg" src="/images/default-cover.svg" alt="${post.title}">
           </a>
         </div>
         <div class="recent-post-info">
-          <a class="article-title" href="/post/${post.id}.html" title="${post.title}">${post.title}</a>
+          <a class="article-title" href="/post/?id=${post.id}" title="${post.title}">${post.title}</a>
           <div class="article-meta-wrap">
             <span class="post-meta-date"><i class="far fa-calendar-alt"></i> ${date}</span>
             <span class="article-meta"><span class="article-meta__categories"><a href="/categories/${encodeURIComponent(categoryName)}/">${categoryName}</a></span></span>

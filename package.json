@@ -7,7 +7,10 @@
     "clean": "hexo clean",
     "deploy": "hexo deploy",
     "server": "hexo server",
-    "start": "hexo server"
+    "start": "hexo server",
+    "dev": "hexo server --watch",
+    "backend": "cd admin-backend && npm start",
+    "admin": "cd admin-frontend && npm run dev"
   },
   "hexo": {
     "version": "7.3.0"

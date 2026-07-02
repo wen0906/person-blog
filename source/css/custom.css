@@ -98,6 +98,95 @@ a {
   transition: all 0.3s ease;
 }
 
+/* 动态文章详情页样式 */
+#post-detail-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.post-detail {
+  background: var(--card-bg, #fff);
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
+}
+
+.post-detail .post-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text-color, #333);
+  line-height: 1.4;
+}
+
+.post-detail .article-meta-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--line-color, #eee);
+  font-size: 14px;
+  color: var(--text-color, #666);
+}
+
+.post-detail .article-meta-wrap .article-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.post-detail .post-content {
+  line-height: 1.8;
+  color: var(--text-color, #333);
+  font-size: 16px;
+}
+
+.post-detail .post-content h1,
+.post-detail .post-content h2,
+.post-detail .post-content h3 {
+  margin: 24px 0 16px;
+  font-weight: 600;
+}
+
+.post-detail .post-content h1 { font-size: 24px; }
+.post-detail .post-content h2 { font-size: 20px; }
+.post-detail .post-content h3 { font-size: 18px; }
+
+.post-detail .post-content p {
+  margin: 16px 0;
+}
+
+.post-detail .post-content code {
+  background: rgba(27, 31, 35, 0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 0.9em;
+}
+
+.post-detail .post-content blockquote {
+  border-left: 4px solid #667eea;
+  padding: 8px 16px;
+  margin: 16px 0;
+  background: rgba(102, 126, 234, 0.05);
+  color: #666;
+}
+
+.post-detail .post-content a {
+  color: #667eea;
+  border-bottom: 1px solid #667eea;
+}
+
+.post-error {
+  text-align: center;
+  padding: 60px 20px;
+  color: #e74c3c;
+  font-size: 16px;
+}
+
 /* 移动端菜单优化 */
 @media (max-width: 768px) {
   #mobile-sidebar {
