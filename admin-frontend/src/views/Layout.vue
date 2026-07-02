@@ -14,7 +14,7 @@
           <span>分类管理</span>
         </el-menu-item>
         <el-menu-item index="/tags">
-          <el-icon><Tag /></el-icon>
+          <el-icon><PriceTag /></el-icon>
           <span>标签管理</span>
         </el-menu-item>
         <el-menu-item index="/settings">
@@ -54,7 +54,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { Document, Folder, Tag, Setting, User, ArrowDown } from '@element-plus/icons-vue'
+import { Document, Folder, PriceTag, Setting, User, ArrowDown } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 
 const router = useRouter()
